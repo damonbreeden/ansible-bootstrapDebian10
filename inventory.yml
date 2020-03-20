@@ -1,0 +1,3 @@
+all:
+  hosts:
+    hp-9470m:
