@@ -3,6 +3,15 @@
   become: true
   tasks:
   # https://docs.docker.com/install/linux/docker-ce/debian/
+  # https://docs.docker.com/install/linux/linux-postinstall/
+  - name: Create 'docker' group
+    group:
+      name: docker
+      state: present
+  - name: Add 'damon' to 'docker'
+    user:
+      name: damon
+      group: docker
   - name: Install apt-transport-https
     apt:
       name: apt-transport-https
@@ -46,3 +55,26 @@
     apt:
       name: containerd.io
       state: latest
+  # add an override file to enable remote access to Docker service
+  # https://docs.docker.com/config/daemon/systemd/
+  # actually don't think this is necessary...
+  # use DOCKER_HOST='ssh://user@host' instead
+  # could be necessary in order to use TCP instead of SSH but I think SSH is more secure
+  # - name: Create '/etc/systemd/system/docker.service.d'
+  #   file:
+  #     name: /etc/systemd/system/docker.service.d
+  #     state: directory
+  #     owner: root
+  #     group: root
+  #     mode: '0644'
+  # - name: Create '/etc/systemd/system/docker.service.d/override.conf'
+  #   file:
+  #     name: /etc/systemd/system/docker.service.d/override.conf
+  #     state: touch
+  #     owner: root
+  #     group: root
+  #     mode: '0644'
+  - name: Reload Docker service
+    service:
+      name: docker
+      state: reloaded
