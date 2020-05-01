@@ -6,6 +6,17 @@
   # the last answer here has nothing to do with Ansible but does describe how to do it...
   # https://stackoverflow.com/questions/41292850/how-to-mount-all-partitions-listed-on-the-fstab-with-ansible
   tasks:
+  - name: Create /mnt/drive1
+    file:
+      path: /mnt/drive1
+      state: directory
+  - name: Mount drive1
+    mount:
+      path: /mnt/drive1
+      src: UUID=d165129d-52f2-4143-a78c-67e747cd4f54
+      fstype: ext4
+      opts: defaults
+      state: present  
   - name: Create /mnt/drive3
     file:
       path: /mnt/drive3
